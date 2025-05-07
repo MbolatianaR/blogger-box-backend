@@ -1,4 +1,4 @@
 package com.dauphine.blogger.repositories;
 
-public class CategoryRepositary {
+public class CategoryRepository {
 }
