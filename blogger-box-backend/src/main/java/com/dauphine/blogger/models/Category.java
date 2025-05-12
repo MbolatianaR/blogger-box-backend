@@ -17,12 +17,6 @@ public class Category{
     @Column(name = "name")
     private String name;
 
-
-    public Category(UUID id) {
-        this.id = id;
-        this.name = name;
-    }
-
     public Category() {
     }
 
