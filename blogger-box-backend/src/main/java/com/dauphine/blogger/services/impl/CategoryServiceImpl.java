@@ -5,6 +5,7 @@ import com.dauphine.blogger.repositories.CategoryRepository;
 import com.dauphine.blogger.services.CategoryService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,6 +26,8 @@ public class CategoryServiceImpl implements CategoryService {
         temporaryCategories.add(new Category(UUID.randomUUID(), "my second category"));
         temporaryCategories.add(new Category(UUID.randomUUID(), "my third category"));
     }*/
+
+
 
     @Override
     public List<Category> getAll() {
@@ -89,6 +92,11 @@ public class CategoryServiceImpl implements CategoryService {
     public boolean deleteById(UUID id) {
        repository.deleteById(id);
        return true;
+    }
+
+    @Override
+    public List<Category> getAllLikeName(String name) {
+        return repository.findAllLikeName(name);
     }
 
 }

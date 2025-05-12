@@ -2,6 +2,7 @@ package com.dauphine.blogger.controllers;
 
 import com.dauphine.blogger.models.Post;
 import com.dauphine.blogger.services.PostService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,14 +13,24 @@ import java.util.UUID;
 public class PostController {
 
     private final PostService service;
+    private final PostService postService;
 
-    public PostController(PostService service) {
+    public PostController(PostService service, PostService postService) {
         this.service = service;
+        this.postService = postService;
     }
 
     @GetMapping
-    public List<Post> getAll() {
-        return service.getAll();
+    @Operation(
+            summary = "Get all posts",
+            description = "Retrieve all posts or filter like content or title"
+    )
+
+    public List<Post> getAll(@RequestParam(required = false)String search) {
+        List<Post> posts = search == null || search.isBlank()
+                ? postService.getAll()
+                : postService.getAllLikeTitleOrContent(search);
+        return posts;
     }
 
     @GetMapping("{id}")

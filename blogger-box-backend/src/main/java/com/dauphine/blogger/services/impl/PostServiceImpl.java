@@ -133,4 +133,10 @@ public class PostServiceImpl implements PostService {
     public void deleteById(UUID id) {
         repository.deleteById(id);
     }
+
+    @Override
+    public List<Post> getAllLikeTitleOrContent(String search) {
+        return repository.findAllLikeTitleOrContent(search);
+    }
+
 }

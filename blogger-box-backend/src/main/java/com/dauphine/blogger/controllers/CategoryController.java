@@ -2,6 +2,7 @@ package com.dauphine.blogger.controllers;
 
 import com.dauphine.blogger.models.Category;
 import com.dauphine.blogger.services.CategoryService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -14,14 +15,23 @@ import java.util.UUID;
 public class CategoryController {
 
     private final CategoryService service;
+    private final CategoryService categoryService;
 
-    public CategoryController(CategoryService service) {
+    public CategoryController(CategoryService service, CategoryService categoryService) {
         this.service = service;
+        this.categoryService = categoryService;
     }
 
     @GetMapping
-    public List<Category> getAll() {
-        return service.getAll();
+    @Operation(
+            summary = "Get all categories",
+            description = "Retrieve all categories or filter like name"
+    )
+    public List<Category> getAll(@RequestParam(required = false) String name) {
+        List<Category> categories = name == null || name.isBlank()
+                ? categoryService.getAll()
+                : categoryService.getAllLikeName(name);
+        return categories;
     }
 
     @GetMapping("{id}")

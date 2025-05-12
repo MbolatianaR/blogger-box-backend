@@ -24,4 +24,6 @@ public interface PostService {
     Post updateContent(UUID id, String newContent);
 
     void deleteById(UUID id);
+
+    List<Post> getAllLikeTitleOrContent(String title);
 }
