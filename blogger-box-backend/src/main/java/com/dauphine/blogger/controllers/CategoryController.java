@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -81,9 +82,19 @@ public class CategoryController {
         return ResponseEntity.ok(category);
     }
 
-    @DeleteMapping
-    public void deleteById(@PathVariable UUID id) {
-       service.deleteById(id);
+    @DeleteMapping("{id}")
+    @Operation(
+            summary = "Delete category by ID",
+            description = "Deletes a category by its ID. Returns 204 if successful or 404 if not found."
+    )
+    public ResponseEntity<Void> deleteById(@PathVariable UUID id) throws CategoryNotFoundByIdException {
+        Optional<Category> category = service.getByIdOptional(id);
+        if (category.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        service.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
+
 
 }

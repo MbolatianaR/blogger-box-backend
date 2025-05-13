@@ -7,6 +7,7 @@ import com.dauphine.blogger.services.CategoryService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -89,14 +90,21 @@ public class CategoryServiceImpl implements CategoryService {
     }*/
 
     @Override
-    public boolean deleteById(UUID id) {
-       repository.deleteById(id);
-       return true;
+    public void deleteById(UUID id) throws CategoryNotFoundByIdException {
+        Category category = repository.findById(id)
+                .orElseThrow(() -> new CategoryNotFoundByIdException(id));
+        repository.delete(category);
     }
+
 
     @Override
     public List<Category> getAllLikeName(String name) {
         return repository.findAllLikeName(name);
+    }
+
+    @Override
+    public Optional<Category> getByIdOptional(UUID id) {
+        return repository.findById(id);
     }
 
 }
