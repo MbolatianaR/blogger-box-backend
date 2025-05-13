@@ -21,6 +21,10 @@ public class GlobalDefaultExceptionHandler {
                 .body(ex.getMessage());
     }
 
+    @ExceptionHandler(PostTitleAlreadyExistsException.class)
+    public ResponseEntity<String> handlePostTitleAlreadyExists(PostTitleAlreadyExistsException ex) {
+        return ResponseEntity.status(409).body(ex.getMessage());
+    }
 
 
 }

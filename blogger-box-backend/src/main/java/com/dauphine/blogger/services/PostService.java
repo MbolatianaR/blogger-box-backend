@@ -1,5 +1,7 @@
 package com.dauphine.blogger.services;
 
+import com.dauphine.blogger.exceptions.PostNotFoundByIdException;
+import com.dauphine.blogger.exceptions.PostTitleAlreadyExistsException;
 import com.dauphine.blogger.models.Post;
 
 import java.util.List;
@@ -13,17 +15,17 @@ public interface PostService {
 
     Post getById(UUID id);
 
-    Post create(String title, String content, UUID categoryId);
+    //Post create(String title, String content, UUID categoryId);
 
-    Post update(UUID id, String title, String content);
+    Post update(UUID id, String title, String content) throws PostTitleAlreadyExistsException, PostNotFoundByIdException;
 
     boolean existsById(UUID id);
 
-    Post create(String title, String content);
+    Post create(String title, String content) throws PostTitleAlreadyExistsException;
 
-    Post updateContent(UUID id, String newContent);
+    Post updateContent(UUID id, String newContent) throws PostNotFoundByIdException;
 
-    void deleteById(UUID id);
+    void deleteById(UUID id) throws PostNotFoundByIdException;
 
     List<Post> getAllLikeTitleOrContent(String title);
 }

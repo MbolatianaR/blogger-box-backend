@@ -16,4 +16,6 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
             WHERE (UPPER(post.content) LIKE UPPER(CONCAT("%", :name , "%"))) OR (UPPER(post.title) LIKE UPPER(CONCAT("%", :name , "%")))
             """)
     List<Post> findAllLikeTitleOrContent(@Param("name") String name);
+
+    boolean existsByTitle(String title);
 }

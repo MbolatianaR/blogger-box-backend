@@ -84,7 +84,7 @@ public class CategoryController {
 
     @DeleteMapping("{id}")
     @Operation(
-            summary = "Delete category by ID",
+            summary = "Delete category by id",
             description = "Deletes a category by its ID. Returns 204 if successful or 404 if not found."
     )
     public ResponseEntity<Void> deleteById(@PathVariable UUID id) throws CategoryNotFoundByIdException {

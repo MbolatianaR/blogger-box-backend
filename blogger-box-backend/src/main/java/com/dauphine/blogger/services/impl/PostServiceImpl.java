@@ -1,5 +1,7 @@
 package com.dauphine.blogger.services.impl;
 
+import com.dauphine.blogger.exceptions.PostNotFoundByIdException;
+import com.dauphine.blogger.exceptions.PostTitleAlreadyExistsException;
 import com.dauphine.blogger.models.Post;
 
 import com.dauphine.blogger.repositories.PostRepository;
@@ -61,13 +63,13 @@ public class PostServiceImpl implements PostService {
         return repository.findById(id).orElse(null);
     }
 
-    @Override
-    public Post create(String title, String content, UUID categoryId) {
+    //@Override
+    /*public Post create(String title, String content, UUID categoryId) {
         Post post = new Post();
         post.setTitle(title);
         post.setContent(content);
         return repository.save(post);
-    }
+    }*/
 
     /*@Override
     public Post create(String title, String content, UUID categoryId) {
@@ -82,21 +84,31 @@ public class PostServiceImpl implements PostService {
     }*/
 
     @Override
-    public Post create(String title, String content) {
-        Post post = new Post();
-        post.setTitle(title);
-        post.setContent(content);
+    public Post create(String title, String content) throws PostTitleAlreadyExistsException {
+        if (repository.existsByTitle(title)) {
+            throw new PostTitleAlreadyExistsException(title);
+        }
+
+        Post post = new Post(UUID.randomUUID(), title, content, null);
         return repository.save(post);
     }
 
     @Override
-    public Post update(UUID id, String title, String content) {
-        Post post = repository.findById(id).orElse(null);
-        assert post != null;
+    public Post update(UUID id, String title, String content) throws PostTitleAlreadyExistsException, PostNotFoundByIdException {
+        Post post = repository.findById(id)
+                .orElseThrow(PostNotFoundByIdException::new);
+
+        boolean titleExists = repository.existsByTitle(title) && !post.getTitle().equals(title);
+        if (titleExists) {
+            throw new PostTitleAlreadyExistsException(title);
+        }
+
         post.setTitle(title);
         post.setContent(content);
+
         return repository.save(post);
     }
+
 
     @Override
     public boolean existsById(UUID id) {
@@ -117,10 +129,12 @@ public class PostServiceImpl implements PostService {
     }*/
 
     @Override
-    public Post updateContent(UUID id, String newContent) {
-        Post post = repository.findById(id).orElse(null);
-        assert post != null;
+    public Post updateContent(UUID id, String newContent) throws PostNotFoundByIdException {
+        Post post = repository.findById(id)
+                .orElseThrow(PostNotFoundByIdException::new);
+
         post.setContent(newContent);
+
         return repository.save(post);
     }
 
@@ -130,8 +144,10 @@ public class PostServiceImpl implements PostService {
     }*/
 
     @Override
-    public void deleteById(UUID id) {
-        repository.deleteById(id);
+    public void deleteById(UUID id) throws PostNotFoundByIdException {
+        Post post = repository.findById(id)
+                .orElseThrow(PostNotFoundByIdException::new);
+        repository.delete(post);
     }
 
     @Override
