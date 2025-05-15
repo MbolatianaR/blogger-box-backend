@@ -11,6 +11,7 @@ import com.dauphine.blogger.services.PostService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -49,10 +50,19 @@ public class PostServiceImpl implements PostService {
         return repository.findAll().stream().filter(p -> p.getCategory().getId().equals(categoryId)).collect(Collectors.toList());
     }
 
+    /*@Override
+    public List<Post> getAll() {
+        return repository.findAll()
+                .stream()
+                .sorted(Comparator.comparing(Post::getCreatedDate).reversed())
+                .collect(Collectors.toList());
+    }*/
+
     @Override
     public List<Post> getAll() {
         return repository.findAll();
     }
+
 
     /*@Override
     public Post getById(UUID id) {
