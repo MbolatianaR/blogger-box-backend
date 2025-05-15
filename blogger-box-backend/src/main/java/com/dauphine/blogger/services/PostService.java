@@ -28,4 +28,7 @@ public interface PostService {
     void deleteById(UUID id) throws PostNotFoundByIdException;
 
     List<Post> getAllLikeTitleOrContent(String title);
+
+    Post create(String title, String content, UUID categoryId) throws PostTitleAlreadyExistsException;
+
 }

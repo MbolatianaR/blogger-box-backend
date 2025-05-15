@@ -25,9 +25,10 @@ public class Post {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
     private Category category;
+
 
     public Post(UUID id, String title, String content, Category category) {
         this.id = id;

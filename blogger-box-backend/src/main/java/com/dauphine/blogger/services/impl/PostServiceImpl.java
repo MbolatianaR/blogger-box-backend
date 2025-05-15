@@ -2,12 +2,15 @@ package com.dauphine.blogger.services.impl;
 
 import com.dauphine.blogger.exceptions.PostNotFoundByIdException;
 import com.dauphine.blogger.exceptions.PostTitleAlreadyExistsException;
+import com.dauphine.blogger.models.Category;
 import com.dauphine.blogger.models.Post;
 
+import com.dauphine.blogger.repositories.CategoryRepository;
 import com.dauphine.blogger.repositories.PostRepository;
 import com.dauphine.blogger.services.PostService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -16,7 +19,7 @@ import java.util.stream.Collectors;
 public class PostServiceImpl implements PostService {
 
     //private final List<Post> temporaryPosts;
-
+    private final CategoryRepository categoryRepository;
     private final PostRepository repository;
 
     /*public PostServiceImpl() {
@@ -26,7 +29,8 @@ public class PostServiceImpl implements PostService {
         temporaryPosts.add(new Post(UUID.randomUUID(), "Title 3", "Content 3", new Category(UUID.randomUUID(), "Category 3")));
     }*/
 
-    public PostServiceImpl(PostRepository repository) {
+    public PostServiceImpl(CategoryRepository categoryRepository, PostRepository repository) {
+        this.categoryRepository = categoryRepository;
         this.repository = repository;
     }
 
@@ -153,6 +157,21 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<Post> getAllLikeTitleOrContent(String search) {
         return repository.findAllLikeTitleOrContent(search);
+    }
+
+    @Override
+    public Post create(String title, String content, UUID categoryId) throws PostTitleAlreadyExistsException {
+        if (repository.existsByTitle(title)) {
+            throw new PostTitleAlreadyExistsException(title);
+        }
+
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new RuntimeException("Category not found with id " + categoryId));
+
+        Post post = new Post(UUID.randomUUID(), title, content, category);
+        post.setCreatedDate(LocalDateTime.now());
+
+        return repository.save(post);
     }
 
 }
