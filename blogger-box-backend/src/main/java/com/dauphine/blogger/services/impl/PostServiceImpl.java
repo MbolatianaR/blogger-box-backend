@@ -60,7 +60,10 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> getAll() {
-        return repository.findAll();
+        return repository.findAll()
+                .stream()
+                .sorted(Comparator.comparing(Post::getCreatedDate).reversed())
+                .collect(Collectors.toList());
     }
 
 
@@ -96,16 +99,6 @@ public class PostServiceImpl implements PostService {
         temporaryPosts.add(post);
         return post;
     }*/
-
-    @Override
-    public Post create(String title, String content) throws PostTitleAlreadyExistsException {
-        if (repository.existsByTitle(title)) {
-            throw new PostTitleAlreadyExistsException(title);
-        }
-
-        Post post = new Post(UUID.randomUUID(), title, content, null);
-        return repository.save(post);
-    }
 
     @Override
     public Post update(UUID id, String title, String content) throws PostTitleAlreadyExistsException, PostNotFoundByIdException {
@@ -183,5 +176,6 @@ public class PostServiceImpl implements PostService {
 
         return repository.save(post);
     }
+
 
 }

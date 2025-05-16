@@ -21,8 +21,6 @@ public interface PostService {
 
     boolean existsById(UUID id);
 
-    Post create(String title, String content) throws PostTitleAlreadyExistsException;
-
     Post updateContent(UUID id, String newContent) throws PostNotFoundByIdException;
 
     void deleteById(UUID id) throws PostNotFoundByIdException;

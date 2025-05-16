@@ -21,8 +21,8 @@ public class Post {
     private String content;
 
     @Column(name = "created_date")
-    //@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    //@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
